@@ -1,5 +1,5 @@
 {
-  "name": "my-form-project",
+  "name": "my-project",
   "version": "1.0.0",
   "description": "Form submission project with Supabase backend",
   "main": "server.js",
@@ -9,7 +9,7 @@
     "dev": "node server.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.100.1",
+    "@supabase/supabase-js": "^2.39.0",
     "body-parser": "^1.20.4",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
