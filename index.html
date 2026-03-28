@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 750px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px; /* spacing between sections */
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px; /* spacing between fields */
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      display: block;
+      letter-spacing: 0.3px;
+    }
+
+    input, textarea, select, button {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #successMsg {
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: center;
+      color: #2e7d32;
+    }
+
+    /* Checkbox styles */
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 15px;
+      background: #f5f7fa;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+    .checkbox-group label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #4CAF50;
+    }
+
+    /* Flex layout for side-by-side fields */
+    .row {
+      display: flex;
+      gap: 50px;
+    }
+    .row .half {
+      flex: 1;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Course Registration Form</h2>
+
+  <form id="registrationForm">
+    <!-- Courses Multiple Checkboxes -->
+    <label>Which course(s) are you interested in?</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="courses" value="Word Associate"> Word Associate</label>
+      <label><input type="checkbox" name="courses" value="Excel Associate"> Excel Associate</label>
+      <label><input type="checkbox" name="courses" value="Word Associate with MOS Certification"> Word Associate with MOS Certification</label>
+      <label><input type="checkbox" name="courses" value="Excel Associate with MOS Certification"> Excel Associate with MOS Certification</label>
+      <label><input type="checkbox" name="courses" value="Excel Expert with MOS Certification"> Excel Expert with MOS Certification</label>
+      <label><input type="checkbox" name="courses" value="Excel Expert"> Excel Expert</label>
+      <label><input type="checkbox" name="courses" value="Outlook Associate"> Outlook Associate</label>
+      <label><input type="checkbox" name="courses" value="Bookkeeping Principles"> Bookkeeping Principles</label>
+      <label><input type="checkbox" name="courses" value="Customer Service & Reception (HYBRID)"> Customer Service & Reception (HYBRID)</label>
+    </div>
+
+    <!-- Name Fields Side by Side -->
+    <div class="row">
+      <div class="half">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" required>
+      </div>
+      <div class="half">
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" required>
+      </div>
+    </div>
+
+    <!-- Email and Phone Side by Side -->
+    <div class="row">
+      <div class="half">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="half">
+        <label for="phone">Phone No</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+    </div>
+
+    <!-- How did you hear about us? -->
+    <label for="source">How did you hear about us?</label>
+    <textarea id="source" name="source" rows="3" placeholder="Write here..." required></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="successMsg"></div>
+</div>
+
+<script>
+const form = document.getElementById("registrationForm");
+const successMsg = document.getElementById("successMsg");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(form);
+  const courses = formData.getAll("courses");
+
+  const data = {
+    courses,
+    first_name: formData.get("first_name"),
+    last_name: formData.get("last_name"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    source: formData.get("source")
+  };
+
+  try {
+    const res = await fetch("/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      successMsg.textContent = "✅ Thank you! Your form has been submitted.";
+      form.reset();
+    } else {
+      successMsg.textContent = "❌ Something went wrong. Try again.";
+    }
+  } catch (err) {
+    console.error(err);
+    successMsg.textContent = "❌ Something went wrong. Try again.";
+  }
+});
+</script>
+
+</body>
+</html>
