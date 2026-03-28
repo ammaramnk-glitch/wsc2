@@ -176,8 +176,8 @@
 </div>
 
 <script>
-document.getElementById("registrationForm").addEventListener("submit", async function (event) {
-    event.preventDefault(); // 🚀 stop page refresh
+document.getElementById("registrationForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); // 🚀 Prevent page reload
 
     const formData = {
         courses: document.getElementById("courses").value,
@@ -188,23 +188,27 @@ document.getElementById("registrationForm").addEventListener("submit", async fun
         source: document.getElementById("source").value
     };
 
-    const res = await fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-    });
+    try {
+        const res = await fetch("/api/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData)
+        });
 
-    const data = await res.json();
-    console.log(data);
+        const data = await res.json();
+        console.log(data);
 
-    if (data.success) {
-        alert("Registration submitted successfully!");
-    } else {
-        alert("Error: " + data.error);
+        if (data.success) {
+            alert("Registration submitted successfully!");
+        } else {
+            alert("Error: " + data.error);
+        }
+    } catch (err) {
+        console.error("Fetch error:", err);
+        alert("Error submitting form. Check console.");
     }
 });
 </script>
-
 
 </body>
 </html>
